@@ -13,10 +13,10 @@ public class GameManager : MonoBehaviour
     {
         EMPTY,
         NORMAL,
-        BARRIER,
+        BARRIER,   //障碍
         ROW_CLEAR,
         COLUMN_CLEAR,
-        RAINBOWCANDY,
+        RAINBOWCANDY,//彩虹糖
         COUNT//标记类型
     }
 
@@ -32,7 +32,7 @@ public class GameManager : MonoBehaviour
 
     public GameObject gridPrefab;
 
-    //甜品数组
+    //甜品数组()生成的甜品的是数组
     private GameSweet[,] sweets;
 
     //要交换的两个甜品对象
@@ -66,20 +66,46 @@ public class GameManager : MonoBehaviour
 
     public void Start()
     {
+        sweetPrefabDic = new Dictionary<SweetType, GameObject>();
+        for(int i=0;i<sweerPrefabs.Length; i++)
+        {
+            if(!sweetPrefabDic.ContainsKey(sweerPrefabs[i].type))
+            {
+                sweetPrefabDic.Add(sweerPrefabs[i].type, sweerPrefabs[i].prefab);
+            }
+        }
+
+
         for (int x = 0; x < xColum; x++)
         {
             for (int y = 0; y < yRow; y++)
             {
-                GameObject go = Instantiate(GridPrefab, CorrectPos(x,y), Quaternion.identity);
+                GameObject go = Instantiate(gridPrefab, CorrectPos(x,y), Quaternion.identity);
                 go.transform.SetParent(transform);
             }
         }
+
+        sweets = new GameSweet[xColum, yRow];
+        for (int x = 0; x < xColum; x++)
+        {
+            for (int y = 0; y < yRow; y++)
+            {
+                CreateNewSweet(x, y, SweetType.EMPTY);
+            }
+        }
+
+
     }
     public Vector3 CorrectPos(int x, int y)
     {
         //实际需要实例化巧克力块的X位置=GameManager位置的X坐标-大网格长度的一半+行列对应的X坐标
         //实际需要实例化巧克力块的Y位置=GameManager位置的Y坐标+大网格高度的一半-行列对应的Y坐标
         return new Vector3(transform.position.x - xColum / 2f + x, transform.position.y + yRow / 2f - y);
+    }
+
+    public void CreateNewSweet(int x,int y,SweetType type)
+    {
+
     }
 
 }
