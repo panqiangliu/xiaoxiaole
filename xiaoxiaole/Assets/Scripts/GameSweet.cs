@@ -44,7 +44,7 @@ public class GameSweet : MonoBehaviour
 
     private GameManager.SweetType type;
 
-
+    [HideInInspector]
     public GameManager gameManager;
 
     public void Init(int _x, int _y, GameManager _gamemanager, GameManager.SweetType _type)
