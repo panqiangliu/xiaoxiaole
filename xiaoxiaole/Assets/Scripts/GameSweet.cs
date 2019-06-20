@@ -6,7 +6,6 @@ public class GameSweet : MonoBehaviour
 {
     private int x;
     private int y;
-
     public int X
     {
         get
@@ -16,10 +15,12 @@ public class GameSweet : MonoBehaviour
 
         set
         {
-            x = value;
+            if (CanMove())
+            {
+                x = value;
+            }
         }
     }
-
     public int Y
     {
         get
@@ -29,11 +30,13 @@ public class GameSweet : MonoBehaviour
 
         set
         {
-            y = value;
+            if (CanMove())
+            {
+                y = value;
+            }
         }
     }
-
-
+    private GameManager.SweetType type;
     public GameManager.SweetType Type
     {
         get
@@ -42,10 +45,22 @@ public class GameSweet : MonoBehaviour
         }
     }
 
-    private GameManager.SweetType type;
-
     [HideInInspector]
     public GameManager gameManager;
+    private MovedSweet movedComponent;
+    public MovedSweet MovedComponent
+    {
+        get
+        {
+            return movedComponent;
+        }
+    }
+
+    public bool CanMove()
+    {
+        return movedComponent != null;
+    }
+
 
     public void Init(int _x, int _y, GameManager _gamemanager, GameManager.SweetType _type)
     {

@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class MovedSweet : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameSweet sweet;
+    private void Awake()
     {
-        
+        sweet = GetComponent<GameSweet>();
+    }
+    public void Move(int newX, int newY)
+    {
+        sweet.X = newX;
+        sweet.Y = newY;
+        sweet.transform.localPosition = sweet.gameManager.CorrectPos(newX, newY);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
