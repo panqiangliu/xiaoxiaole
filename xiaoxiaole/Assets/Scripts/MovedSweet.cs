@@ -13,7 +13,7 @@ public class MovedSweet : MonoBehaviour
     {
         sweet.X = newX;
         sweet.Y = newY;
-        sweet.transform.localPosition = sweet.gameManager.CorrectPos(newX, newY);
+        sweet.transform.position = sweet.gameManager.CorrectPos(newX, newY);
     }
 
 }
