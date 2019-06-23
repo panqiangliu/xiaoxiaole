@@ -51,7 +51,7 @@ public class ColorSweet : MonoBehaviour
 
     private void Awake()
     {
-        sprite = transform.Find("sweet").GetComponent<SpriteRenderer>();
+        sprite = transform.Find("Sweet").GetComponent<SpriteRenderer>();
         colorSpriteDic = new Dictionary<ColorType, Sprite>();
 
         for (int i = 0; i < ColorSprites.Length; i++)

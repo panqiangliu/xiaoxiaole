@@ -220,7 +220,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 775643800e9f90640a3678af590bd1e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sweerPrefabs: []
+  sweerPrefabs:
+  - type: 0
+    prefab: {fileID: 1916920586678938, guid: 6054181b33313f14e9417d23069efe4b, type: 3}
+  - type: 1
+    prefab: {fileID: 1360093070950852, guid: 89e3c6ce8a108124e9819ce13219aee7, type: 3}
   gridPrefab: {fileID: 1737976470717386, guid: 1d828132f565af241982f14860830d93, type: 3}
   xColum: 10
   yRow: 10

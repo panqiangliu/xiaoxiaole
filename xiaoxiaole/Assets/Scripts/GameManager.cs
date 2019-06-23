@@ -7,8 +7,8 @@ public class GameManager : MonoBehaviour
     /// <summary>
     /// 甜品的相关成员变量
     /// </summary>
-#region
-        //甜品种类
+    #region
+    //甜品种类
     public enum SweetType
     {
         EMPTY,
@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
     }
 
     //甜品预制体的字典，我们可以通过甜品的种类来得到对应的甜品游戏物体
-    public Dictionary<SweetType,GameObject> sweetPrefabDic;
+    public Dictionary<SweetType, GameObject> sweetPrefabDic;
     [System.Serializable]
     public struct SweetPrefab
     {
@@ -40,7 +40,7 @@ public class GameManager : MonoBehaviour
     private GameSweet enteredSweet;
 
 
-#endregion
+    #endregion
     private static GameManager _instance;
     public static GameManager Instance
     {
@@ -67,9 +67,9 @@ public class GameManager : MonoBehaviour
     public void Start()
     {
         sweetPrefabDic = new Dictionary<SweetType, GameObject>();
-        for(int i=0;i<sweerPrefabs.Length; i++)
+        for (int i = 0; i < sweerPrefabs.Length; i++)
         {
-            if(!sweetPrefabDic.ContainsKey(sweerPrefabs[i].type))
+            if (!sweetPrefabDic.ContainsKey(sweerPrefabs[i].type))
             {
                 sweetPrefabDic.Add(sweerPrefabs[i].type, sweerPrefabs[i].prefab);
             }
@@ -80,7 +80,7 @@ public class GameManager : MonoBehaviour
         {
             for (int y = 0; y < yRow; y++)
             {
-                GameObject go = Instantiate(gridPrefab, CorrectPos(x,y), Quaternion.identity);
+                GameObject go = Instantiate(gridPrefab, CorrectPos(x, y), Quaternion.identity);
                 go.transform.SetParent(transform);
             }
         }
@@ -90,25 +90,11 @@ public class GameManager : MonoBehaviour
         {
             for (int y = 0; y < yRow; y++)
             {
-                //CreateNewSweet(x, y, SweetType.EMPTY);
-                GameObject newSweet = Instantiate(sweetPrefabDic[SweetType.NORMAL], Vector3.zero, Quaternion.identity);
-                newSweet.transform.SetParent(transform);
-
-                sweets[x, y] = newSweet.GetComponent<GameSweet>();
-                sweets[x, y].Init(x, y, this, SweetType.NORMAL);
-
-                if(sweets[x,y].CanMove())
-                {
-                    sweets[x, y].MovedComponent.Move(x, y);
-                }
-                if(sweets[x,y].CanColor())
-                {
-                    sweets[x, y].ColoredComponent.SetColor((ColorSweet.ColorType)Random.Range(0,sweets[x,y].ColoredComponent.NumColors));
-                }
+                CreateNewSweet(x, y, SweetType.EMPTY);
             }
         }
 
-
+        AllFill();
     }
     public Vector3 CorrectPos(int x, int y)
     {
@@ -117,9 +103,68 @@ public class GameManager : MonoBehaviour
         return new Vector3(transform.position.x - xColum / 2f + x, transform.position.y + yRow / 2f - y);
     }
 
-    public void CreateNewSweet(int x,int y,SweetType type)
+    public GameSweet CreateNewSweet(int x, int y, SweetType type)
     {
+        GameObject newSweet = Instantiate(sweetPrefabDic[type], CorrectPos(x, y), Quaternion.identity);
+        newSweet.transform.SetParent(transform);
 
+        sweets[x, y] = newSweet.GetComponent<GameSweet>();
+        sweets[x, y].Init(x, y, this, type);
+
+        return sweets[x, y];
     }
 
+    //全部填充的方法
+    public void AllFill()
+    {
+        while (Fill())
+        {
+
+        }
+    }
+
+    /// <summary>
+    /// 分步填充
+    /// </summary>
+    public bool Fill()
+    {
+        bool filledNotFinished = false;    //判断本次的填充是否完成；
+
+        for (int y = yRow - 2; y >= 0; y--)
+        {
+            for (int x = 0; x < xColum; x++)
+            {
+                GameSweet sweet = sweets[x, y];      //得到当前的元素的位置
+                if (sweet.CanMove())      //如果无法移动，则无法向下填充
+                {
+                    GameSweet sweetBelow = sweets[x, y + 1];
+
+                    if (sweetBelow.Type == SweetType.EMPTY)  //垂直填充
+                    {
+                        sweet.MovedComponent.Move(x, y + 1);
+                        sweets[x, y + 1] = sweet;
+                        CreateNewSweet(x, y, SweetType.EMPTY);
+                        filledNotFinished = true;
+                    }
+                }
+            }
+            //最上排 特殊情况
+            for (int x = 0; x < xColum; x++)
+            {
+                GameSweet sweet = sweets[x, 0];
+                if (sweet.Type == SweetType.EMPTY)
+                {
+                    GameObject newSweet = Instantiate(sweetPrefabDic[SweetType.NORMAL], CorrectPos(x, -1), Quaternion.identity);
+                    newSweet.transform.parent = transform;
+
+                    sweets[x, 0] = newSweet.GetComponent<GameSweet>();
+                    sweets[x, 0].Init(x, -1, this, SweetType.NORMAL);
+                    sweets[x, 0].MovedComponent.Move(x, 0);
+                    sweets[x, 0].ColoredComponent.SetColor((ColorSweet.ColorType)Random.Range(0, sweets[x, 0].ColoredComponent.NumColors));
+                    filledNotFinished = true;
+                }
+            }
+        }
+        return filledNotFinished;
+    }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class MovedSweet : MonoBehaviour
 {
-    public GameSweet sweet;
+    private GameSweet sweet;
     private void Awake()
     {
         sweet = GetComponent<GameSweet>();
