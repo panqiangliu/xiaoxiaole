@@ -90,7 +90,21 @@ public class GameManager : MonoBehaviour
         {
             for (int y = 0; y < yRow; y++)
             {
-                CreateNewSweet(x, y, SweetType.EMPTY);
+                //CreateNewSweet(x, y, SweetType.EMPTY);
+                GameObject newSweet = Instantiate(sweetPrefabDic[SweetType.NORMAL], Vector3.zero, Quaternion.identity);
+                newSweet.transform.SetParent(transform);
+
+                sweets[x, y] = newSweet.GetComponent<GameSweet>();
+                sweets[x, y].Init(x, y, this, SweetType.NORMAL);
+
+                if(sweets[x,y].CanMove())
+                {
+                    sweets[x, y].MovedComponent.Move(x, y);
+                }
+                if(sweets[x,y].CanColor())
+                {
+                    sweets[x, y].ColoredComponent.SetColor((ColorSweet.ColorType)Random.Range(0,sweets[x,y].ColoredComponent.NumColors));
+                }
             }
         }
 
