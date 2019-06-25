@@ -41,6 +41,7 @@ public class GameManager : MonoBehaviour
 
 
     #endregion
+    //单例
     private static GameManager _instance;
     public static GameManager Instance
     {
@@ -58,6 +59,7 @@ public class GameManager : MonoBehaviour
     public int xColum;
     public int yRow;
 
+    public float fillTime;
 
     void awake()
     {
@@ -94,7 +96,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        AllFill();
+        StartCoroutine(AllFill());
     }
     public Vector3 CorrectPos(int x, int y)
     {
@@ -115,11 +117,19 @@ public class GameManager : MonoBehaviour
     }
 
     //全部填充的方法
-    public void AllFill()
+    public IEnumerator AllFill()
     {
-        while (Fill())
+        bool needRefill = true;
+        while (needRefill)
         {
+            yield return new WaitForSeconds(fillTime);
+            while(Fill())
+            {
+                yield return new WaitForSeconds(fillTime);
+            }
 
+            //清除所有我们已经匹配好的甜品
+        
         }
     }
 
@@ -141,7 +151,7 @@ public class GameManager : MonoBehaviour
 
                     if (sweetBelow.Type == SweetType.EMPTY)  //垂直填充
                     {
-                        sweet.MovedComponent.Move(x, y + 1);
+                        sweet.MovedComponent.Move(x, y + 1,fillTime);
                         sweets[x, y + 1] = sweet;
                         CreateNewSweet(x, y, SweetType.EMPTY);
                         filledNotFinished = true;
@@ -159,7 +169,7 @@ public class GameManager : MonoBehaviour
 
                     sweets[x, 0] = newSweet.GetComponent<GameSweet>();
                     sweets[x, 0].Init(x, -1, this, SweetType.NORMAL);
-                    sweets[x, 0].MovedComponent.Move(x, 0);
+                    sweets[x, 0].MovedComponent.Move(x, 0,fillTime);
                     sweets[x, 0].ColoredComponent.SetColor((ColorSweet.ColorType)Random.Range(0, sweets[x, 0].ColoredComponent.NumColors));
                     filledNotFinished = true;
                 }
