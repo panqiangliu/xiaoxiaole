@@ -12,6 +12,8 @@ public class MovedSweet : MonoBehaviour
     {
         sweet = GetComponent<GameSweet>();
     }
+
+    //负责协程的开启和关闭
     public void Move(int newX, int newY,float time)
     {
         if (moveCoroutine != null)
@@ -27,6 +29,8 @@ public class MovedSweet : MonoBehaviour
     {
         sweet.X = newX;
         sweet.Y = newY;
+
+        //每帧移动一点点
         Vector3 startPos = transform.position;
         Vector3 endPos = sweet.gameManager.CorrectPos(newX, newY);
 
