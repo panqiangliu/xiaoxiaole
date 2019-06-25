@@ -11,6 +11,9 @@ public class MsPaint : MonoBehaviour
     public Material lineRenderMaterial;
     public List<Vector3> positions = new List<Vector3>();
     private bool isMouseDown = false;
+    private Vector3 lasetPosition;
+    private float lineDistance=0.02f;
+
     #region
     public void OnRedClolorchanged(bool isOn)
     {
@@ -73,12 +76,18 @@ public class MsPaint : MonoBehaviour
             currentLineRender.numCapVertices = 5;
             currentLineRender.numCornerVertices = 5;
             positions.Clear();
-            AddPosition();
+            Vector3 position = MousePosition();
+            AddPosition(position);
             isMouseDown = true;
+            lineDistance += 0.02f;
         }
         if (isMouseDown == true)
         {
-            AddPosition();
+            Vector3 position = MousePosition();
+            if (Vector3.Distance(position, lasetPosition) > 0.1)
+            {
+                AddPosition(position);
+            }
         }
 
         if (Input.GetMouseButtonUp(0))
@@ -89,13 +98,13 @@ public class MsPaint : MonoBehaviour
         }
     }
 
-    void AddPosition()
+    void AddPosition(Vector3 position)
     {
-        Vector3 point = MousePosition();
-        point.z -= 0.01f;
-        positions.Add(point);
+        position.z -= lineDistance;
+        positions.Add(position);
         currentLineRender.positionCount = positions.Count;
         currentLineRender.SetPositions(positions.ToArray());
+        lasetPosition = position;
     }
 
     private Vector3 MousePosition()
