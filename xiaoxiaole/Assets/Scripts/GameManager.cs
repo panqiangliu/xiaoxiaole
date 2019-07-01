@@ -56,8 +56,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public int xColum;
-    public int yRow;
+    public int xColum;      //x表达的是行数
+    public int yRow;        //y表示的是列数
 
     public float fillTime;
 
@@ -96,6 +96,9 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        Destroy(sweets[4, 4].gameObject);
+        CreateNewSweet(4, 4, SweetType.BARRIER);
+
         StartCoroutine(AllFill());
     }
     public Vector3 CorrectPos(int x, int y)
@@ -123,13 +126,13 @@ public class GameManager : MonoBehaviour
         while (needRefill)
         {
             yield return new WaitForSeconds(fillTime);
-            while(Fill())
+            while (Fill())
             {
                 yield return new WaitForSeconds(fillTime);
             }
 
             //清除所有我们已经匹配好的甜品
-        
+
         }
     }
 
@@ -151,10 +154,59 @@ public class GameManager : MonoBehaviour
 
                     if (sweetBelow.Type == SweetType.EMPTY)  //垂直填充
                     {
-                        sweet.MovedComponent.Move(x, y + 1,fillTime);
+                        Destroy(sweetBelow.gameObject);
+                        sweet.MovedComponent.Move(x, y + 1, fillTime);
                         sweets[x, y + 1] = sweet;
                         CreateNewSweet(x, y, SweetType.EMPTY);
                         filledNotFinished = true;
+                    }
+                    else
+                    {
+                        for (int down = -1; down < 1; down++)
+                        {
+                            if (down != 0)
+                            {
+                                int downX = down + x;
+                                //该处判断列的位置    0 < downX < xColum
+                                //   [0,0]     [1,0]   [2,0] ...[x,0]
+                                //   [1,0]     [1,1]   [1,2] ...[1,yRow]
+                                //   ...        ...
+                                //[xColum,0] [xColum] [xColum]...[xColum]
+                                if (downX > 0 && downX < xColum)   
+                                {                                                                           
+                                    GameSweet downSweet = sweets[downX, y + 1];
+                                    if(downSweet.Type==SweetType.EMPTY)
+                                    {
+                                        bool canFill = true;
+
+                                        //判断数值方向上是否符合填充的要求
+                                        for(int aboveY = y;aboveY>=0;aboveY--)
+                                        {
+                                            GameSweet sweetAbove = sweets[downX, aboveY];
+
+                                            if(sweetAbove.CanMove())
+                                            {
+                                                break;
+                                            }
+                                            else if(!sweetAbove.CanMove()&&sweetAbove.Type!=SweetType.EMPTY)
+                                            {
+                                                canFill = false;
+                                                break;
+                                            }
+                                        }
+                                        if(!canFill)
+                                        {
+                                            Destroy(downSweet.gameObject);
+                                            sweet.MovedComponent.Move(downX, y + 1, fillTime);
+                                            sweets[downX, y + 1] = sweet;
+                                            CreateNewSweet(x, y, SweetType.EMPTY);
+                                            filledNotFinished = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -169,7 +221,7 @@ public class GameManager : MonoBehaviour
 
                     sweets[x, 0] = newSweet.GetComponent<GameSweet>();
                     sweets[x, 0].Init(x, -1, this, SweetType.NORMAL);
-                    sweets[x, 0].MovedComponent.Move(x, 0,fillTime);
+                    sweets[x, 0].MovedComponent.Move(x, 0, fillTime);
                     sweets[x, 0].ColoredComponent.SetColor((ColorSweet.ColorType)Random.Range(0, sweets[x, 0].ColoredComponent.NumColors));
                     filledNotFinished = true;
                 }
