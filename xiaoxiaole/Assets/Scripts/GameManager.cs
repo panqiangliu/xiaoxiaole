@@ -160,7 +160,7 @@ public class GameManager : MonoBehaviour
                         CreateNewSweet(x, y, SweetType.EMPTY);
                         filledNotFinished = true;
                     }
-                    else
+                    else        //斜向填充
                     {
                         for (int down = -1; down < 1; down++)
                         {
@@ -228,5 +228,46 @@ public class GameManager : MonoBehaviour
             }
         }
         return filledNotFinished;
+    }
+
+    /// <summary>
+    /// 判断产品是否相邻的方法
+    /// </summary>
+    public bool IsFriend(GameSweet sweet1,GameSweet sweet2)
+    {
+        //有两种情况，X相同，y相差1；y相同，x只相差1
+        return ((sweet1.X==sweet2.X&&Mathf.Abs(sweet1.Y-sweet2.Y)==1)||
+        (sweet1.Y==sweet2.Y&&Mathf.Abs(sweet2.X-sweet1.X)==1));
+    }
+
+    /// <summary>
+    /// 交换两个甜品的方法
+    /// </summary>
+    public void ExchangeSweets(GameSweet sweet1,GameSweet sweet2)
+    {
+        if(sweet1.CanMove()&&sweet2.CanMove())
+        {
+            sweets[sweet1.X,sweet1.Y] = sweet2;
+            sweets[sweet2.X,sweet2.Y] = sweet1;
+        }
+    }
+
+
+    /// <summary>
+    /// 对甜品的操作方法
+    /// </summary>
+    public void EnterSweet(GameSweet sweet)
+    {
+
+    }
+
+    public void PressSweet(GameSweet sweet)
+    {
+
+    }
+
+    public void ReleaseSweet()
+    {
+
     }
 }
