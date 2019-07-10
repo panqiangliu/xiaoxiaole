@@ -86,4 +86,19 @@ public class GameSweet : MonoBehaviour
         gameManager = _gamemanager;
         type = _type;
     }
+
+    private void OnMouseEnter()
+    {
+        gameManager.EnterSweet(this);
+    }
+
+    private void OnMouseDown()
+    {
+        gameManager.PressSweet(this);
+    }
+
+    private void OnMouseUp()
+    {
+        gameManager.ReleaseSweet();
+    }
 }
