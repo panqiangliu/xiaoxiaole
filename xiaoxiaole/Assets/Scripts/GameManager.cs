@@ -61,6 +61,8 @@ public class GameManager : MonoBehaviour
 
     public float fillTime;
 
+    private bool gameOver;
+
     void awake()
     {
         _instance = this;
@@ -249,6 +251,11 @@ public class GameManager : MonoBehaviour
         {
             sweets[sweet1.X,sweet1.Y] = sweet2;
             sweets[sweet2.X,sweet2.Y] = sweet1;
+
+            int tempX=sweet1.X;
+            int tempy=sweet2.Y;
+            sweet1.MovedComponent.Move(sweet2.X,sweet2.Y,fillTime);
+            sweet2.MovedComponent.Move(tempX,tempy,fillTime);
         }
     }
 
@@ -258,16 +265,28 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void EnterSweet(GameSweet sweet)
     {
-
+        if(gameOver == false)
+        {
+            enteredSweet=sweet;
+        }
     }
 
     public void PressSweet(GameSweet sweet)
     {
-
+        if(gameOver == false)
+        {
+            pressedSweet = sweet;
+        }
     }
 
     public void ReleaseSweet()
     {
-
+        if(gameOver == false)
+        {
+            if(IsFriend(pressedSweet,enteredSweet))
+            {
+                ExchangeSweets(pressedSweet,enteredSweet);
+            }
+        }
     }
 }
