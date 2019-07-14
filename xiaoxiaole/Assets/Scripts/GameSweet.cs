@@ -63,8 +63,18 @@ public class GameSweet : MonoBehaviour
         {
             return coloredComponent;
         }
-
     }
+    
+    private ClearedSweet clearedComponent;
+
+    public ClearedSweet ClearedComponent
+    {
+        get
+        {
+            return clearedComponent;
+        }
+    }
+
     public bool CanMove()
     {
         return movedComponent != null;
@@ -73,11 +83,17 @@ public class GameSweet : MonoBehaviour
     {
         return coloredComponent != null;
     }
+
+    public bool CanClear()
+    {
+        return clearedComponent != null;
+    }
+
     private void Awake()
     {
         movedComponent = GetComponent<MovedSweet>();
         coloredComponent = GetComponent<ColorSweet>();
-       // clearedComponent = GetComponent<ClearedSweet>();
+        clearedComponent = GetComponent<ClearedSweet>();
     }
     public void Init(int _x, int _y, GameManager _gamemanager, GameManager.SweetType _type)
     {
