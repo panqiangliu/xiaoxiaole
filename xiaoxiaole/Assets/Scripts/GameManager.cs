@@ -328,7 +328,7 @@ public class GameManager : MonoBehaviour
             //行匹配
             //当x=0代表向左，1代表向右遍历sweet所在的行的物体
             matchRowSweets.Add(sweet);
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i <= 1; i++)
             {
                 for (int xDistance = 1; xDistance < xColum; xDistance++)
                 {

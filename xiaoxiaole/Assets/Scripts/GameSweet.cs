@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class GameSweet : MonoBehaviour
 {
-    private int x;
-    private int y;
+    public int x;
+    public int y;
     public int X
     {
         get
