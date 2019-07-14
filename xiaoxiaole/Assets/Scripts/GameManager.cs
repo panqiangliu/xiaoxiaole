@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+
     /// <summary>
     /// 甜品的相关成员变量
     /// </summary>
@@ -134,7 +135,7 @@ public class GameManager : MonoBehaviour
             }
 
             //清除所有我们已经匹配好的甜品
-
+            needRefill = ClearAllMatchedSweet();
         }
     }
 
@@ -258,6 +259,14 @@ public class GameManager : MonoBehaviour
                 int tempy = sweet1.Y;
                 sweet1.MovedComponent.Move(sweet2.X, sweet2.Y, fillTime);
                 sweet2.MovedComponent.Move(tempX, tempy, fillTime);
+
+
+
+                ClearAllMatchedSweet();
+                StartCoroutine(AllFill());
+
+                pressedSweet = null;
+                enteredSweet = null;
             }
             else
             {
@@ -353,6 +362,66 @@ public class GameManager : MonoBehaviour
                 }
             }
 
+            //L T型匹配
+            //检查一下当前行遍历列表中的元素数量是否大于3
+            if (matchRowSweets.Count >= 3)
+            {
+                for (int i = 0; i < matchRowSweets.Count; i++)
+                {
+                    //行匹配列表中满足匹配条件的每个元素上下依次进行列遍历
+                    // 0代表上方 1代表下方
+                    for (int j = 0; j <= 1; j++)
+                    {
+                        for (int yDistance = 1; yDistance < yRow; yDistance++)
+                        {
+                            int y;
+                            if (j == 0)
+                            {
+                                y = newY - yDistance;
+                            }
+                            else
+                            {
+                                y = newY + yDistance;
+                            }
+                            if (y < 0 || y >= yRow)
+                            {
+                                break;
+                            }
+
+                            if (sweets[matchRowSweets[i].X, y].CanColor() && sweets[matchRowSweets[i].X, y].ColoredComponent.Color == color)
+                            {
+                                matchLineSweets.Add(sweets[matchRowSweets[i].X, y]);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (matchLineSweets.Count < 2)
+                    {
+                        matchLineSweets.Clear();
+                    }
+                    else
+                    {
+                        for (int j = 0; j < matchLineSweets.Count; j++)
+                        {
+                            finishedMatchingSweets.Add(matchLineSweets[j]);
+                        }
+                        break;
+                    }
+                }
+            }
+
+            if (finishedMatchingSweets.Count >= 3)
+            {
+                return finishedMatchingSweets;
+            }
+            matchRowSweets.Clear();
+            matchLineSweets.Clear();
+
+            matchLineSweets.Add(sweet);
             //列匹配
 
             //i=0代表往左，i=1代表往右
@@ -392,6 +461,61 @@ public class GameManager : MonoBehaviour
                     finishedMatchingSweets.Add(matchLineSweets[i]);
                 }
             }
+
+
+            //L T型匹配
+            //检查一下当前行遍历列表中的元素数量是否大于3
+            if (matchLineSweets.Count >= 3)
+            {
+                for (int i = 0; i < matchLineSweets.Count; i++)
+                {
+                    //行匹配列表中满足匹配条件的每个元素上下依次进行列遍历
+                    // 0代表上方 1代表下方
+                    for (int j = 0; j <= 1; j++)
+                    {
+                        for (int xDistance = 1; xDistance < xColum; xDistance++)
+                        {
+                            int x;
+                            if (j == 0)
+                            {
+                                x = newY - xDistance;
+                            }
+                            else
+                            {
+                                x = newY + xDistance;
+                            }
+                            if (x < 0 || x >= xColum)
+                            {
+                                break;
+                            }
+
+                            if (sweets[x, matchLineSweets[i].Y].CanColor() && sweets[x, matchLineSweets[i].Y].ColoredComponent.Color == color)
+                            {
+                                matchRowSweets.Add(sweets[x, matchLineSweets[i].Y]);
+                            }
+                            else
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    if (matchRowSweets.Count < 2)
+                    {
+                        matchRowSweets.Clear();
+                    }
+                    else
+                    {
+                        for (int j = 0; j < matchRowSweets.Count; j++)
+                        {
+                            finishedMatchingSweets.Add(matchRowSweets[j]);
+                        }
+                        break;
+                    }
+                }
+            }
+
+
             if (finishedMatchingSweets.Count >= 3)
             {
                 return finishedMatchingSweets;
@@ -402,5 +526,46 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    public bool ClearSweet(int x, int y)
+    {
+        if (sweets[x, y].CanClear() && !sweets[x, y].ClearedComponent.IsClear)
+        {
+            sweets[x, y].ClearedComponent.Clear();
+            CreateNewSweet(x, y, SweetType.EMPTY);
+
+            return true;
+        }
+        return false;
+    }
+
+    //清楚全部完成匹配的方法
+    private bool ClearAllMatchedSweet()
+    {
+        bool needRefill = false;
+        for (int y = 0; y < yRow; y++)
+        {
+            for (int x = 0; x < xColum; x++)
+            {
+                if (sweets[x, y].CanClear())
+                {
+                    List<GameSweet> matchList = MatchSweets(sweets[x, y], x, y);
+                    if (matchList != null)
+                    {
+                        for (int i = 0; i < matchList.Count; i++)
+                        {
+                            if (ClearSweet(matchList[i].X, matchList[i].Y))
+                            {
+                                needRefill = true;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return needRefill;
+    }
+
 }
+
 
