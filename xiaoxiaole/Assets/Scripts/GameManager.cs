@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -61,6 +62,11 @@ public class GameManager : MonoBehaviour
     public int yRow;        //y表示的是列数
 
     public float fillTime;
+
+    //显示时间的text
+    public Text timeText;
+
+    public float gameTime = 60;
 
     private bool gameOver;
 
