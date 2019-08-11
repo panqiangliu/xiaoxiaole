@@ -70,10 +70,15 @@ public class GameManager : MonoBehaviour
 
     private bool gameOver;
 
-    void awake()
+    public int playerScore=0;
+
+    public Text scoreText;
+
+    private void Awake()
     {
         _instance = this;
     }
+
 
     public void Start()
     {
@@ -110,6 +115,26 @@ public class GameManager : MonoBehaviour
 
         StartCoroutine(AllFill());
     }
+
+    public void Update()
+    {
+        if (gameOver)
+        {
+            return;
+        }
+        gameTime -= Time.deltaTime;
+        if (gameTime < 0)
+        {
+            gameTime = 0;
+            //x显示失败面板
+            //播放失败面板的动画
+            gameOver = true;
+            return;
+        }
+        timeText.text = gameTime.ToString("0");
+        scoreText.text = playerScore.ToString();
+    }
+
     public Vector3 CorrectPos(int x, int y)
     {
         //实际需要实例化巧克力块的X位置=GameManager位置的X坐标-大网格长度的一半+行列对应的X坐标
