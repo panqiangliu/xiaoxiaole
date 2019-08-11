@@ -865,7 +865,7 @@ MonoBehaviour:
     prefab: {fileID: 1360093070950852, guid: adac191cfaab5734185e41fa9e01fa63, type: 2}
   - type: 2
     prefab: {fileID: 1694787063487358, guid: cfa16784964831246a3f56aee26571f5, type: 2}
-  gridPrefab: {fileID: 1737976470717386, guid: 1d828132f565af241982f14860830d93, type: 2}
+  gridPrefab: {fileID: 1658711361239572, guid: 1d828132f565af241982f14860830d93, type: 2}
   xColum: 9
   yRow: 8
   fillTime: 0.1
