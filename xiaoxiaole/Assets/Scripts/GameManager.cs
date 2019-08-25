@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
@@ -66,13 +67,22 @@ public class GameManager : MonoBehaviour
     //显示时间的text
     public Text timeText;
 
-    public float gameTime = 60;
+    public float gameTime = 2;
 
     private bool gameOver;
 
-    public int playerScore=0;
+    public int playerScore = 0;
 
     public Text scoreText;
+
+    public float addScoreTime;
+
+    public float currentScore;
+
+    public GameObject overPanel;
+
+    public Text finalScoreText;
+
 
     private void Awake()
     {
@@ -118,10 +128,7 @@ public class GameManager : MonoBehaviour
 
     public void Update()
     {
-        if (gameOver)
-        {
-            return;
-        }
+
         gameTime -= Time.deltaTime;
         if (gameTime < 0)
         {
@@ -129,10 +136,24 @@ public class GameManager : MonoBehaviour
             //x显示失败面板
             //播放失败面板的动画
             gameOver = true;
-            return;
+            overPanel.SetActive(true);
+            finalScoreText.text = playerScore.ToString();
         }
         timeText.text = gameTime.ToString("0");
-        scoreText.text = playerScore.ToString();
+
+        if (addScoreTime <= 0.05f)
+        {
+            addScoreTime += Time.deltaTime;
+        }
+        else
+        {
+            if (currentScore < playerScore)
+            {
+                currentScore++;
+                scoreText.text = currentScore.ToString();
+                addScoreTime = 0;
+            }
+        }
     }
 
     public Vector3 CorrectPos(int x, int y)
@@ -565,9 +586,36 @@ public class GameManager : MonoBehaviour
             sweets[x, y].ClearedComponent.Clear();
             CreateNewSweet(x, y, SweetType.EMPTY);
 
+            ClearBarrier(x, y);
             return true;
         }
         return false;
+    }
+
+    public void ClearBarrier(int x, int y)
+    {
+        for (int friendx = x - 1; friendx <= x + 1; friendx++)
+        {
+            if (friendx != x && friendx >= 0 && friendx < xColum)
+            {
+                if (sweets[friendx, y].Type == SweetType.BARRIER && sweets[friendx, y].CanClear())
+                {
+                    sweets[friendx, y].ClearedComponent.Clear();
+                    CreateNewSweet(friendx, y, SweetType.EMPTY);
+                }
+            }
+        }
+        for (int friendy = y - 1; friendy <= y + 1; friendy++)
+        {
+            if (friendy != y && friendy >= 0 && friendy < yRow)
+            {
+                if (sweets[x, friendy].Type == SweetType.BARRIER && sweets[x, friendy].CanClear())
+                {
+                    sweets[x, friendy].ClearedComponent.Clear();
+                    CreateNewSweet(x, friendy, SweetType.EMPTY);
+                }
+            }
+        }
     }
 
     //清楚全部完成匹配的方法
@@ -597,6 +645,16 @@ public class GameManager : MonoBehaviour
         return needRefill;
     }
 
+
+    public void ReturnToMain()
+    {
+        SceneManager.LoadScene(0);
+    }
+
+    public void Replay()
+    {
+        SceneManager.LoadScene(1);
+    }
 }
 
 
