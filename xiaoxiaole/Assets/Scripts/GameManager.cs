@@ -592,6 +592,7 @@ public class GameManager : MonoBehaviour
         return false;
     }
 
+    //饼干的消除
     public void ClearBarrier(int x, int y)
     {
         for (int friendx = x - 1; friendx <= x + 1; friendx++)
