@@ -632,11 +632,35 @@ public class GameManager : MonoBehaviour
                     List<GameSweet> matchList = MatchSweets(sweets[x, y], x, y);
                     if (matchList != null)
                     {
+                        SweetType specialSweetsType = SweetType.COUNT;
+                        GameSweet randomSweet = matchList[Random.Range(0, matchList.Count)];
+                        int specialSweetX = randomSweet.X;
+                        int specialSweetY = randomSweet.Y;
+                        if (matchList.Count == 4)
+                            specialSweetsType = (SweetType)Random.Range((int)SweetType.ROW_CLEAR, (int)SweetType.ROW_CLEAR);
+                        else if (matchList.Count == 5)
+                            specialSweetsType = SweetType.RAINBOWCANDY;
+
                         for (int i = 0; i < matchList.Count; i++)
                         {
                             if (ClearSweet(matchList[i].X, matchList[i].Y))
                             {
                                 needRefill = true;
+                            }
+                        }
+                        if(specialSweetsType!= SweetType.COUNT)
+                        {
+                            Destroy(sweets[specialSweetX, specialSweetY]);
+                            GameSweet newSweet = CreateNewSweet(specialSweetX, specialSweetY, specialSweetsType);
+                            if(specialSweetsType == SweetType.ROW_CLEAR || specialSweetsType == SweetType.COLUMN_CLEAR
+                                && newSweet.CanColor() && matchList[0].CanColor())
+                            {
+                                newSweet.ColoredComponent.SetColor(matchList[0].ColoredComponent.Color);
+                            }
+                            //加上彩虹糖的特殊类型的产生
+                            else if (specialSweetsType == SweetType.RAINBOWCANDY && newSweet.CanColor())
+                            {
+                                newSweet.ColoredComponent.SetColor(ColorSweet.ColorType.ANY);
                             }
                         }
                     }
