@@ -1756,6 +1756,12 @@ MonoBehaviour:
     prefab: {fileID: 1360093070950852, guid: adac191cfaab5734185e41fa9e01fa63, type: 2}
   - type: 2
     prefab: {fileID: 1694787063487358, guid: cfa16784964831246a3f56aee26571f5, type: 2}
+  - type: 3
+    prefab: {fileID: 1062782968408424, guid: 37f0fb10c0603dc40b4b273a012e9ff1, type: 2}
+  - type: 4
+    prefab: {fileID: 1663634185805568, guid: 99a284dcceb945248b9f7c3b059a8a72, type: 2}
+  - type: 5
+    prefab: {fileID: 1663634185805568, guid: 99a284dcceb945248b9f7c3b059a8a72, type: 2}
   gridPrefab: {fileID: 1658711361239572, guid: 1d828132f565af241982f14860830d93, type: 2}
   xColum: 9
   yRow: 8
