@@ -22,9 +22,9 @@ GameObject:
   - component: {fileID: 114937543789518314}
   - component: {fileID: 114063556259609120}
   - component: {fileID: 114670830775641192}
-  - component: {fileID: 114633764846740312}
   - component: {fileID: 65062963961782104}
   - component: {fileID: 95414968262076044}
+  - component: {fileID: 114015556835944626}
   m_Layer: 0
   m_Name: ColomnClear_SweetPrefab
   m_TagString: Untagged
@@ -105,6 +105,20 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &114015556835944626
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1663634185805568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: beff5164fcf31f7439f6eebd9f31ef64, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  clearAnimation: {fileID: 7400000, guid: 4506b90d6d36fbe4782ec0152e6df1ed, type: 2}
+  destoryAudio: {fileID: 8300000, guid: 5aaa4c7d5781546c6a13a9f1eb97b15b, type: 3}
+  isRow: 0
 --- !u!114 &114063556259609120
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -116,19 +130,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0999622abc524a74c9f1299fb3af4466, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &114633764846740312
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1663634185805568}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1501e03c0abc9f342a4cd66d39240cc6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  clearAnimation: {fileID: 7400000, guid: 4506b90d6d36fbe4782ec0152e6df1ed, type: 2}
-  destoryAudio: {fileID: 8300000, guid: 9cb19eb032d304b07acec596ae2ce4a4, type: 3}
 --- !u!114 &114670830775641192
 MonoBehaviour:
   m_ObjectHideFlags: 1

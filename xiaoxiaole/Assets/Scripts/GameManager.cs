@@ -165,6 +165,7 @@ public class GameManager : MonoBehaviour
 
     public GameSweet CreateNewSweet(int x, int y, SweetType type)
     {
+        Debug.Log("x 的值：" + x + "   y的值：" + y + "    type" + type);
         GameObject newSweet = Instantiate(sweetPrefabDic[type], CorrectPos(x, y), Quaternion.identity);
         newSweet.transform.SetParent(transform);
 
@@ -637,9 +638,9 @@ public class GameManager : MonoBehaviour
                         int specialSweetX = randomSweet.X;
                         int specialSweetY = randomSweet.Y;
                         if (matchList.Count == 4)
-                            specialSweetsType = (SweetType)Random.Range((int)SweetType.ROW_CLEAR, (int)SweetType.ROW_CLEAR);
-                        else if (matchList.Count == 5)
-                            specialSweetsType = SweetType.RAINBOWCANDY;
+                            specialSweetsType = (SweetType)Random.Range((int)SweetType.ROW_CLEAR, (int)SweetType.COLUMN_CLEAR);
+                       // else if (matchList.Count >= 5)
+                       //     specialSweetsType = SweetType.RAINBOWCANDY;
 
                         for (int i = 0; i < matchList.Count; i++)
                         {
@@ -648,11 +649,11 @@ public class GameManager : MonoBehaviour
                                 needRefill = true;
                             }
                         }
-                        if(specialSweetsType!= SweetType.COUNT)
+                        if (specialSweetsType != SweetType.COUNT)
                         {
                             Destroy(sweets[specialSweetX, specialSweetY]);
                             GameSweet newSweet = CreateNewSweet(specialSweetX, specialSweetY, specialSweetsType);
-                            if(specialSweetsType == SweetType.ROW_CLEAR || specialSweetsType == SweetType.COLUMN_CLEAR
+                            if (specialSweetsType == SweetType.ROW_CLEAR || specialSweetsType == SweetType.COLUMN_CLEAR
                                 && newSweet.CanColor() && matchList[0].CanColor())
                             {
                                 newSweet.ColoredComponent.SetColor(matchList[0].ColoredComponent.Color);
@@ -679,6 +680,22 @@ public class GameManager : MonoBehaviour
     public void Replay()
     {
         SceneManager.LoadScene(1);
+    }
+
+    public void ClearRow(int row)
+    {
+        for (int x = 0; x < xColum; x++)
+        {
+            ClearSweet(x, row);
+        }
+    }
+
+    public void ClearColumn(int column)
+    {
+        for (int y = 0; y < yRow; y++)
+        {
+            ClearSweet(column, y);
+        }
     }
 }
 
